@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\v1\PlaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('verifyFirebaseToken')->group(function (){
-    Route::prefix('api/vi')->group(function (){
-    });
+Route::middleware('verifyFirebaseToken')->prefix('v1')->group(function (){
+    Route::post('/place', [PlaceController::class, 'store']);
 });
