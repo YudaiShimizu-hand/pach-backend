@@ -19,7 +19,8 @@ class VerifyFirebaseToken
      */
     public function handle(Request $request, Closure $next)
     {
-        $factory = (new Factory)->withServiceAccount('../../../pach-app-credential.json');
+        $serviceAccountPath = base_path(env('FIREBASE_SERVICE_ACCOUNT'));
+        $factory = (new Factory)->withServiceAccount($serviceAccountPath);
         $auth = $factory->createAuth();
 
         $token = $request->bearerToken();  // リクエストからトークンを取得
@@ -31,8 +32,11 @@ class VerifyFirebaseToken
             return response()->json(['error' => $e->getMessage()], 401);
         }
 
-        $uid = $verifiedIdToken->getClaim('sub');
+        $uid = $verifiedIdToken->claims()->get('sub');
         // ここで$uidを使ってユーザーを識別します
+
+        $request->attributes->add(['firebase_user_id' => $uid]);
+
         return $next($request);
     }
 }
