@@ -26,6 +26,13 @@ class DataController extends Controller
         $data["investment"] = $request->investment;
         $data["proceeds"] = $request->proceeds;
         $data["firebase_user_id"] = $request->get('firebase_user_id');
+        if($data["investment"] > $data["proceeds"]){
+            $data["score"] = $data["investment"] - $data["proceeds"];
+            $data["judge_flag"] = false;
+        }else{
+            $data["score"] = $data["proceeds"] - $data["investment"];
+            $data["judge_flag"] = true;
+        }
 
         $data->save();
         return response()->json(['message' => '記録情報の登録に成功しました。']);
