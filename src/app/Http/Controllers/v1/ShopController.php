@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $uid = $request->get('firebase_user_id');
+        $getShop = Shop::where('firebase_user_id', $uid)->get();
+        return response()->json($getShop, 200);
+    }
+
+
     public function store(Request $request)
     {
         $place = new Shop();

@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class MachineController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $uid = $request->get('firebase_user_id');
+        $getMachine = Machine::where('firebase_user_id', $uid)->get();
+        return response()->json($getMachine, 200);
+    }
+
+
     public function store(Request $request)
     {
         $place = new Machine();

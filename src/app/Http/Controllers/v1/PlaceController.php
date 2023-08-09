@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 
 class PlaceController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $uid = $request->get('firebase_user_id');
+        $getPlace = Place::where('firebase_user_id', $uid)->get();
+        return response()->json($getPlace, 200);
+    }
+
     public function store(Request $request)
     {
         $place = new Place();

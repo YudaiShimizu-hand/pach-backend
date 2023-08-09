@@ -18,7 +18,14 @@ use App\Http\Controllers\v1\MachineController;
 */
 
 Route::middleware('verifyFirebaseToken')->prefix('v1')->group(function (){
+
+    //場所情報
+    Route::get('/place', [PlaceController::class, 'index']);
     Route::post('/place', [PlaceController::class, 'store']);
+    //店舗情報
+    Route::get('/shop', [ShopController::class, 'index']);
     Route::post('/shop', [ShopController::class, 'store']);
+    //機種情報
+    Route::get('/machine', [MachineController::class, 'index']);
     Route::post('/machine', [MachineController::class, 'store']);
 });
