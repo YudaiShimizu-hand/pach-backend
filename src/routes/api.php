@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\v1\PlaceController;
 use App\Http\Controllers\v1\ShopController;
 use App\Http\Controllers\v1\MachineController;
+use App\Http\Controllers\v1\DataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +29,8 @@ Route::middleware('verifyFirebaseToken')->prefix('v1')->group(function (){
     //機種情報
     Route::get('/machine', [MachineController::class, 'index']);
     Route::post('/machine', [MachineController::class, 'store']);
+
+    Route::prefix('data')->group(function (){
+        Route::post('/store', [DataController::class, 'store']);
+    });
 });
