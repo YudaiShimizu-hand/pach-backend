@@ -44,12 +44,12 @@ class DataController extends Controller
         $shop_id = Shop::where('shop_name', $request->shop_name)->where('firebase_user_id', $request->get('firebase_user_id'))->value('id');
         $machine_id = Machine::where('machine_name', $request->machine_name)->where('firebase_user_id', $request->get('firebase_user_id'))->value('id');
         $getAnalysis = [];
-        $getAnalysis = $this->where('place_id', $place_id)->where('shop_id', $shop_id)->where('machine_id', $machine_id);
-        $totalData = count($getAnalysis);
+        $getAnalysis = Data::where('place_id', $place_id)->where('shop_id', $shop_id)->where('machine_id', $machine_id);
+        $totalData = $getAnalysis->count();
         $getWinData = [];
-        $getWinData = $getAnalysis->where('judge_flag', true);
-        $winData = count(getWinData);
-        $analysisData = $winData / $getWinData * 100;
+        $getWinData = $getAnalysis->where('judge_flag', true)->get();
+        $winData = count($getWinData);
+        $analysisData = ($winData / $totalData) * 100;
         return response()->json($analysisData, 200);
      }
 }
