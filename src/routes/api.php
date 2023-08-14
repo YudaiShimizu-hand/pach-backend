@@ -32,5 +32,7 @@ Route::middleware('verifyFirebaseToken')->prefix('v1')->group(function (){
 
     Route::prefix('data')->group(function (){
         Route::post('/store', [DataController::class, 'store']);
+        //分析
+        Route::get('/analysis', [DataController::class, 'analysis']);
     });
 });
