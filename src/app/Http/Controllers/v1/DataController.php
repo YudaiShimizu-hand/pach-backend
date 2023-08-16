@@ -8,6 +8,7 @@ use App\Models\v1\Place;
 use App\Models\v1\Shop;
 use App\Models\v1\Machine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DataController extends Controller
 {
@@ -26,14 +27,7 @@ class DataController extends Controller
         $data["investment"] = $request->investment;
         $data["proceeds"] = $request->proceeds;
         $data["firebase_user_id"] = $request->get('firebase_user_id');
-        if($data["investment"] > $data["proceeds"]){
-            $data["score"] = $data["investment"] - $data["proceeds"];
-            $data["judge_flag"] = false;
-        }else{
-            $data["score"] = $data["proceeds"] - $data["investment"];
-            $data["judge_flag"] = true;
-        }
-
+        $data["score"] = $data["proceeds"] - $data["investment"];
         $data->save();
         return response()->json(['message' => '記録情報の登録に成功しました。']);
      }
@@ -47,9 +41,33 @@ class DataController extends Controller
         $getAnalysis = Data::where('place_id', $place_id)->where('shop_id', $shop_id)->where('machine_id', $machine_id);
         $totalData = $getAnalysis->count();
         $getWinData = [];
-        $getWinData = $getAnalysis->where('judge_flag', true)->get();
+        $getWinData = $getAnalysis->whereRaw('CAST(proceeds AS SIGNED) - CAST(investment AS SIGNED) > 0')->get();
         $winData = count($getWinData);
         $analysisData = ($winData / $totalData) * 100;
         return response()->json($analysisData, 200);
+     }
+
+     public function total(Request $request)
+     {
+        $totalData = [];
+        $totalData = Data::where('firebase_user_id', $request->get('firebase_user_id'))->get();
+        $totals = 0;
+        foreach($totalData as $total)
+        {
+            $totals += $total->score;
+        }
+        return response()->json($totals, 200);
+     }
+
+     public function monthTotal(Request $request)
+     {
+        $requestedMonth = $request->month;
+        $totalData = Data::where('firebase_user_id', $request->get('firebase_user_id'))->whereRaw('MONTH(created_at) = ?', [$requestedMonth])->get();
+        $totals = 0;
+        foreach($totalData as $total)
+        {
+            $totals += $total->score;
+        }
+        return response()->json($totals, 200);
      }
 }

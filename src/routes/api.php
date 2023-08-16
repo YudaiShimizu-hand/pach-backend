@@ -34,5 +34,10 @@ Route::middleware('verifyFirebaseToken')->prefix('v1')->group(function (){
         Route::post('/store', [DataController::class, 'store']);
         //分析
         Route::get('/analysis', [DataController::class, 'analysis']);
+
+        //合計
+        Route::get('/total', [DataController::class, 'total']);
+        //月の合計
+        Route::get('/monthTotal', [DataController::class, 'monthTotal']);
     });
 });
