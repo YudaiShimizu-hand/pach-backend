@@ -9,6 +9,7 @@ use App\Models\v1\Shop;
 use App\Models\v1\Machine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\DataResource;
 
 class DataController extends Controller
 {
@@ -69,5 +70,12 @@ class DataController extends Controller
             $totals += $total->score;
         }
         return response()->json($totals, 200);
+     }
+
+     public function calendar(Request $request)
+     {
+        $calendarData = Data::where('firebase_user_id', $request->get('firebase_user_id'))->with(['place', 'shop', 'machine'])->get();
+        $data = DataResource::collection($calendarData);
+        return response()->json($data, 200);
      }
 }
