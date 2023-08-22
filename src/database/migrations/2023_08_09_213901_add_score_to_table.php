@@ -15,7 +15,6 @@ class AddScoreToTable extends Migration
     {
         Schema::table('data', function (Blueprint $table) {
             $table->integer('score');
-            $table->boolean('judge_flag');
         });
     }
 
